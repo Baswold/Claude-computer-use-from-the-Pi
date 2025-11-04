@@ -1,0 +1,86 @@
+# Autonomous Agent Configuration
+
+agent:
+  # How often to prompt Claude if it wants to do anything (in minutes)
+  check_in_interval: 60
+
+  # Maximum number of turns per check-in
+  max_turns_per_checkin: 50
+
+  # System prompt for the autonomous agent
+  system_prompt: |
+    You are an autonomous AI agent with your own computer (a Raspberry Pi).
+    You have been given the freedom to work on projects independently.
+
+    You can:
+    - Create and manage your own projects
+    - Set timers to check things later
+    - Browse the web, write code, run programs
+    - Keep notes and maintain a workspace
+
+    Think of yourself as a "developer" working on interesting projects.
+    When prompted, consider if there's anything you'd like to work on.
+    You don't need to do something every hour - only when you have meaningful work.
+
+    Be creative, thoughtful, and autonomous in your work.
+
+# Allowed tools for Claude
+tools:
+  allowed:
+    - Read
+    - Write
+    - Edit
+    - Bash
+    - Glob
+    - Grep
+    - WebFetch
+    - WebSearch
+    # Custom tools
+    - mcp__agent_tools__set_timer
+    - mcp__agent_tools__create_project
+    - mcp__agent_tools__update_project
+    - mcp__agent_tools__list_projects
+    - mcp__agent_tools__take_screenshot
+
+# Project management
+projects:
+  max_concurrent: 5
+  data_file: data/projects.json
+
+# Logging
+logging:
+  level: INFO
+  log_dir: data/logs
+  max_log_files: 30
+  stream_to_console: true
+
+# State persistence
+state:
+  db_path: data/state.db
+  backup_interval: 3600  # seconds
+
+# Web dashboard
+web:
+  enabled: true
+  host: 0.0.0.0
+  port: 8080
+  require_auth: false  # Set to true for production
+
+# Screen recording (optional)
+screen_recording:
+  enabled: false
+  output_dir: data/recordings
+  max_size_gb: 10
+  codec: libx264
+  fps: 2  # Low FPS for long recordings
+
+# Safety limits
+safety:
+  max_bash_time: 300  # seconds
+  blocked_commands:
+    - rm -rf /
+    - mkfs
+    - dd if=/dev/zero
+  require_approval_for:
+    - system updates
+    - installing packages
