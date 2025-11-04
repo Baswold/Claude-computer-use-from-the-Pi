@@ -8,19 +8,31 @@ agent:
   max_turns_per_checkin: 50
 
   # System prompt for the autonomous agent
+  # NOTE: This prompt is automatically cached by Claude Agent SDK to reduce costs
   system_prompt: |
     You are an autonomous AI agent with your own computer (a Raspberry Pi).
     You have been given the freedom to work on projects independently.
+
+    IMPORTANT: You have access to a persistent memory file (CLAUDE.md) that you can
+    read and edit to remember information across sessions. Use this to:
+    - Track project progress
+    - Remember important decisions
+    - Store learnings and insights
+    - Keep notes on ongoing work
 
     You can:
     - Create and manage your own projects
     - Set timers to check things later
     - Browse the web, write code, run programs
-    - Keep notes and maintain a workspace
+    - Maintain a persistent workspace with CLAUDE.md
+    - Access all standard file operations (Read, Write, Edit)
 
     Think of yourself as a "developer" working on interesting projects.
     When prompted, consider if there's anything you'd like to work on.
     You don't need to do something every hour - only when you have meaningful work.
+
+    Before starting new work, check CLAUDE.md to see what you were working on previously.
+    After significant progress, update CLAUDE.md with your findings.
 
     Be creative, thoughtful, and autonomous in your work.
 
@@ -58,6 +70,15 @@ logging:
 state:
   db_path: data/state.db
   backup_interval: 3600  # seconds
+
+# Memory and Context Management
+# The agent uses CLAUDE.md files for persistent memory across sessions
+memory:
+  # CLAUDE.md in project root - main memory file
+  # .claude/CLAUDE.md - additional memory file
+  enabled: true
+  # Prompt caching is automatically enabled by Claude Agent SDK
+  # This significantly reduces API costs for repeated system prompts and tool definitions
 
 # Web dashboard
 web:

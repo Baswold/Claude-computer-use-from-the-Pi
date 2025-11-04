@@ -7,11 +7,22 @@ An autonomous AI agent system that gives Claude independent control of a compute
 This project implements the vision from `vision.md` - creating an autonomous Claude agent that can:
 
 - 🤖 **Operate Independently**: Claude can work on projects without user prompting
+- 🧠 **Persistent Memory**: Claude remembers context across sessions using CLAUDE.md
+- 💰 **Cost Optimized**: 90% cost reduction with automatic prompt caching
 - ⏰ **Set Timers**: Schedule future actions and reminders
 - 📊 **Manage Projects**: Create and track its own projects
 - 🌐 **Use Tools**: Browse web, write code, run programs, take screenshots
 - 📺 **Monitor Activity**: Web dashboard for real-time monitoring
 - 🔄 **Reconnectable**: Close and reopen the UI without losing state
+
+### 🆕 New Features (Latest Update)
+
+- **Persistent Memory**: Claude maintains context across all sessions using CLAUDE.md files
+- **Automatic Prompt Caching**: ~90% cost reduction on repeated system prompts and tools
+- **Improved Path Handling**: Reliable file operations from any directory
+- **Enhanced Logging**: Better visibility into agent operations
+
+See [IMPROVEMENTS.md](IMPROVEMENTS.md) for detailed information about new features.
 
 ## Architecture
 

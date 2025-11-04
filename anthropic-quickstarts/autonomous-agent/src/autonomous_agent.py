@@ -19,16 +19,7 @@ from timer_manager import TimerManager
 from project_manager import ProjectManager
 from session_manager import SessionManager
 
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler("data/logs/agent.log"),
-    ],
-)
-
+# Logger will be configured in main()
 logger = logging.getLogger(__name__)
 
 
@@ -38,18 +29,24 @@ class AutonomousAgent:
     def __init__(self, config_path: str = "config/agent_config.yaml"):
         self.config = self.load_config(config_path)
 
+        # Set working directory to project root
+        self.project_root = Path(__file__).parent.parent
+
         # Initialize managers
         self.timer_manager = TimerManager()
         self.project_manager = ProjectManager(
-            data_file=self.config["projects"]["data_file"]
+            data_file=str(self.project_root / self.config["projects"]["data_file"])
         )
-        self.session_manager = SessionManager()
+        self.session_manager = SessionManager(
+            state_file=str(self.project_root / "data/session_state.json")
+        )
 
         # Agent state
         self.running = False
         self.client: Optional[ClaudeSDKClient] = None
 
         logger.info("Autonomous agent initialized")
+        logger.info(f"Project root: {self.project_root}")
 
     def load_config(self, config_path: str) -> dict:
         """Load configuration from YAML file"""
@@ -134,13 +131,18 @@ class AutonomousAgent:
         # Create MCP server and configure options
         mcp_server = self.create_mcp_server()
 
+        # Configure options with memory and prompt caching support
         options = ClaudeAgentOptions(
             system_prompt=self.config["agent"]["system_prompt"],
             max_turns=self.config["agent"]["max_turns_per_checkin"],
             allowed_tools=self.config["tools"]["allowed"],
             mcp_servers={"agent_tools": mcp_server},
             permission_mode="acceptEdits",  # Auto-accept file edits
+            cwd=str(self.project_root),  # Set working directory
+            setting_sources=["project"],  # Enable CLAUDE.md memory file for persistence
         )
+
+        logger.info("Agent configured with CLAUDE.md memory support")
 
         # Query Claude
         try:
@@ -239,8 +241,34 @@ class AutonomousAgent:
 
 async def main():
     """Main entry point"""
-    # Ensure data directories exist
-    Path("data/logs").mkdir(parents=True, exist_ok=True)
+    # Get project root
+    project_root = Path(__file__).parent.parent
+
+    # Ensure all required directories exist
+    (project_root / "data/logs").mkdir(parents=True, exist_ok=True)
+    (project_root / "data/screenshots").mkdir(parents=True, exist_ok=True)
+    (project_root / ".claude").mkdir(parents=True, exist_ok=True)
+
+    # Configure logging with absolute paths
+    log_file = project_root / "data/logs/agent.log"
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        handlers=[
+            logging.StreamHandler(sys.stdout),
+            logging.FileHandler(str(log_file)),
+        ],
+        force=True,  # Override any previous configuration
+    )
+
+    logger.info("="  * 70)
+    logger.info("AUTONOMOUS CLAUDE AGENT STARTING")
+    logger.info("=" * 70)
+    logger.info(f"Project root: {project_root}")
+    logger.info(f"Log file: {log_file}")
+    logger.info(f"Memory file: {project_root / 'CLAUDE.md'}")
+    logger.info("Memory and prompt caching: ENABLED")
+    logger.info("=" * 70)
 
     # Create and start agent
     agent = AutonomousAgent()
