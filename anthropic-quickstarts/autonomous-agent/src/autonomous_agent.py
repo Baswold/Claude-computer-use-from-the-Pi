@@ -13,9 +13,11 @@ from claude_agent_sdk import ClaudeSDKClient, ClaudeAgentOptions, create_sdk_mcp
 # Import custom tools
 from tools.timer_tool import set_timer, get_due_timers
 from tools.project_tool import create_project, update_project, list_projects
-from tools.screenshot_tool import take_screenshot
+from tools.screenshot_tool import take_screenshot, list_screenshots
 from tools.memory_tool import update_memory, read_memory
 from tools.system_tool import check_system_health, list_processes
+from tools.journal_tool import log_thought, read_thoughts, log_activity
+from tools.file_tool import find_files, quick_note
 
 # Import managers
 from timer_manager import TimerManager
@@ -68,24 +70,33 @@ class AutonomousAgent:
         """Create MCP server with custom tools"""
         return create_sdk_mcp_server(
             name="agent_tools",
-            version="2.0.0",
+            version="3.0.0",  # Bumped for major tool expansion
             tools=[
-                # Timer management
+                # Timer management (1 tool)
                 set_timer,
-                # Project management
+                # Project management (3 tools)
                 create_project,
                 update_project,
                 list_projects,
-                # Memory management
+                # Memory management (2 tools)
                 update_memory,
                 read_memory,
-                # System monitoring
+                # System monitoring (2 tools)
                 check_system_health,
                 list_processes,
-                # Utilities
+                # Screenshots & documentation (2 tools)
                 take_screenshot,
+                list_screenshots,
+                # Journal & activity logging (3 tools)
+                log_thought,
+                read_thoughts,
+                log_activity,
+                # File utilities (2 tools)
+                find_files,
+                quick_note,
             ],
         )
+        # Total: 15 powerful tools for autonomous operation
 
     async def check_in(self, custom_prompt: Optional[str] = None):
         """
