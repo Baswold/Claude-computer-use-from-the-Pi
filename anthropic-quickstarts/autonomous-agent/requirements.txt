@@ -23,7 +23,7 @@ pytz>=2023.3
 # Logging
 colorlog>=6.8.0
 
-# System utilities
+# System utilities (required for system monitoring tools)
 psutil>=5.9.6
 
 # Screenshots (optional, depends on system)

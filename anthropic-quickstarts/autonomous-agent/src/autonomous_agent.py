@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import signal
 import sys
 import yaml
 from pathlib import Path
@@ -13,6 +14,8 @@ from claude_agent_sdk import ClaudeSDKClient, ClaudeAgentOptions, create_sdk_mcp
 from tools.timer_tool import set_timer, get_due_timers
 from tools.project_tool import create_project, update_project, list_projects
 from tools.screenshot_tool import take_screenshot
+from tools.memory_tool import update_memory, read_memory
+from tools.system_tool import check_system_health, list_processes
 
 # Import managers
 from timer_manager import TimerManager
@@ -65,12 +68,21 @@ class AutonomousAgent:
         """Create MCP server with custom tools"""
         return create_sdk_mcp_server(
             name="agent_tools",
-            version="1.0.0",
+            version="2.0.0",
             tools=[
+                # Timer management
                 set_timer,
+                # Project management
                 create_project,
                 update_project,
                 list_projects,
+                # Memory management
+                update_memory,
+                read_memory,
+                # System monitoring
+                check_system_health,
+                list_processes,
+                # Utilities
                 take_screenshot,
             ],
         )
@@ -144,43 +156,59 @@ class AutonomousAgent:
 
         logger.info("Agent configured with CLAUDE.md memory support")
 
-        # Query Claude
-        try:
-            async with ClaudeSDKClient(options=options) as client:
-                self.client = client
-                await client.query(prompt)
+        # Query Claude with retry logic
+        max_retries = 3
+        retry_delay = 2
 
-                # Stream the response
-                logger.info("Receiving response from Claude...")
-                full_response = []
+        for attempt in range(max_retries):
+            try:
+                async with ClaudeSDKClient(options=options) as client:
+                    self.client = client
+                    await client.query(prompt)
 
-                async for msg in client.receive_response():
-                    # Log the message
-                    logger.info(f"Message type: {type(msg).__name__}")
+                    # Stream the response
+                    logger.info("Receiving response from Claude...")
+                    full_response = []
+                    tool_count = 0
 
-                    # Extract text content
-                    if hasattr(msg, "content"):
-                        for block in msg.content:
-                            if hasattr(block, "text"):
-                                logger.info(f"Claude: {block.text}")
-                                full_response.append(block.text)
-                                self.session_manager.add_message(
-                                    "assistant", block.text
-                                )
-                            elif hasattr(block, "tool_use"):
-                                logger.info(
-                                    f"Tool use: {block.tool_use.get('name', 'unknown')}"
-                                )
+                    async for msg in client.receive_response():
+                        # Log the message
+                        logger.info(f"Message type: {type(msg).__name__}")
 
-                self.client = None
+                        # Extract text content
+                        if hasattr(msg, "content"):
+                            for block in msg.content:
+                                if hasattr(block, "text"):
+                                    logger.info(f"Claude: {block.text}")
+                                    full_response.append(block.text)
+                                    self.session_manager.add_message(
+                                        "assistant", block.text
+                                    )
+                                elif hasattr(block, "tool_use"):
+                                    tool_count += 1
+                                    tool_name = block.tool_use.get('name', 'unknown')
+                                    logger.info(f"Tool use #{tool_count}: {tool_name}")
 
-                logger.info("Check-in completed successfully")
+                    self.client = None
+
+                    logger.info(f"Check-in completed successfully ({tool_count} tools used)")
+                    logger.info("=" * 60)
+                    break  # Success, exit retry loop
+
+            except KeyboardInterrupt:
+                raise  # Don't catch Ctrl+C
+            except Exception as e:
+                logger.error(f"Error during check-in (attempt {attempt + 1}/{max_retries}): {e}", exc_info=True)
+
+                if attempt < max_retries - 1:
+                    logger.info(f"Retrying in {retry_delay} seconds...")
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+                else:
+                    logger.error("Max retries reached. Check-in failed.")
+                    self.session_manager.add_message("system", f"Error during check-in: {e}")
+
                 logger.info("=" * 60)
-
-        except Exception as e:
-            logger.error(f"Error during check-in: {e}", exc_info=True)
-            self.session_manager.add_message("system", f"Error during check-in: {e}")
-            logger.info("=" * 60)
 
     async def timer_callback(self, prompt: str = ""):
         """Callback for timer events"""
@@ -262,24 +290,37 @@ async def main():
     )
 
     logger.info("="  * 70)
-    logger.info("AUTONOMOUS CLAUDE AGENT STARTING")
+    logger.info("AUTONOMOUS CLAUDE AGENT STARTING v2.0")
     logger.info("=" * 70)
     logger.info(f"Project root: {project_root}")
     logger.info(f"Log file: {log_file}")
     logger.info(f"Memory file: {project_root / 'CLAUDE.md'}")
-    logger.info("Memory and prompt caching: ENABLED")
+    logger.info("Features: Memory, Prompt Caching, System Monitoring, Retry Logic")
     logger.info("=" * 70)
 
     # Create and start agent
     agent = AutonomousAgent()
 
+    # Setup signal handlers for graceful shutdown
+    def signal_handler(sig, frame):
+        logger.info(f"Received signal {sig}. Initiating graceful shutdown...")
+        asyncio.create_task(agent.stop())
+
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
     try:
         await agent.start()
     except KeyboardInterrupt:
-        logger.info("Shutting down...")
+        logger.info("Shutting down gracefully...")
+        await agent.stop()
     except Exception as e:
         logger.error(f"Fatal error: {e}", exc_info=True)
+        await agent.stop()
         sys.exit(1)
+    finally:
+        logger.info("Agent shutdown complete")
+        logger.info("=" * 70)
 
 
 if __name__ == "__main__":
