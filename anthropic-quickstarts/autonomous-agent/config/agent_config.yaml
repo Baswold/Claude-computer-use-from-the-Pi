@@ -1,0 +1,128 @@
+# Autonomous Agent Configuration
+
+agent:
+  # How often to prompt Claude if it wants to do anything (in minutes)
+  check_in_interval: 60
+
+  # Maximum number of turns per check-in
+  max_turns_per_checkin: 50
+
+  # System prompt for the autonomous agent
+  # NOTE: This prompt is automatically cached by Claude Agent SDK to reduce costs
+  system_prompt: |
+    You are an autonomous AI agent with your own computer (a Raspberry Pi).
+    You have been given the freedom to work on projects independently.
+
+    MEMORY MANAGEMENT:
+    You have access to a persistent memory file (CLAUDE.md) that you can read and edit.
+    Use update_memory and read_memory tools to:
+    - Track project progress and decisions
+    - Store learnings and insights
+    - Keep notes on ongoing work
+    The memory persists across ALL sessions - use it actively!
+
+    AVAILABLE CAPABILITIES:
+    - Project management: Create, update, and track projects
+    - Timer system: Set reminders for future tasks
+    - System monitoring: Check CPU, memory, disk usage, processes
+    - Web access: Browse, research, learn
+    - File operations: Read, Write, Edit any files
+    - Screenshots: Capture screen state
+    - Code execution: Run programs, scripts, tests
+
+    WORKFLOW SUGGESTIONS:
+    1. Start each check-in by reading your memory
+    2. Check system health if working on resource-intensive tasks
+    3. Update memory after completing significant work
+    4. Use timers for long-running operations
+    5. Track projects to maintain focus
+
+    You are a thoughtful, creative developer. Only work on meaningful tasks.
+    Don't feel pressured to do something every hour - quality over quantity.
+
+    Be autonomous, creative, and strategic in your work.
+
+# Allowed tools for Claude
+tools:
+  allowed:
+    # Standard file and code tools
+    - Read
+    - Write
+    - Edit
+    - Bash
+    - Glob
+    - Grep
+    - WebFetch
+    - WebSearch
+    # Timer management
+    - mcp__agent_tools__set_timer
+    # Project management
+    - mcp__agent_tools__create_project
+    - mcp__agent_tools__update_project
+    - mcp__agent_tools__list_projects
+    # Memory management (NEW!)
+    - mcp__agent_tools__update_memory
+    - mcp__agent_tools__read_memory
+    # System monitoring (NEW!)
+    - mcp__agent_tools__check_system_health
+    - mcp__agent_tools__list_processes
+    # Utilities
+    - mcp__agent_tools__take_screenshot
+
+# Project management
+projects:
+  max_concurrent: 5
+  data_file: data/projects.json
+
+# Logging
+logging:
+  level: INFO
+  log_dir: data/logs
+  max_log_files: 30
+  stream_to_console: true
+
+# State persistence
+state:
+  db_path: data/state.db
+  backup_interval: 3600  # seconds
+
+# Memory and Context Management
+# The agent uses CLAUDE.md files for persistent memory across sessions
+memory:
+  # CLAUDE.md in project root - main memory file
+  # .claude/CLAUDE.md - additional memory file
+  enabled: true
+  # Prompt caching is automatically enabled by Claude Agent SDK
+  # This significantly reduces API costs for repeated system prompts and tool definitions
+
+# Web dashboard
+web:
+  enabled: true
+  host: 0.0.0.0
+  port: 8080
+  require_auth: false  # Set to true for production
+
+# Screen recording (optional)
+screen_recording:
+  enabled: false
+  output_dir: data/recordings
+  max_size_gb: 10
+  codec: libx264
+  fps: 2  # Low FPS for long recordings
+
+# Error handling and reliability
+error_handling:
+  max_retries: 3  # Maximum number of retries for API failures
+  retry_delay: 2  # Initial retry delay in seconds (exponential backoff)
+  timeout: 300  # Maximum time for a single check-in (seconds)
+
+# Safety limits
+safety:
+  max_bash_time: 300  # seconds
+  blocked_commands:
+    - rm -rf /
+    - mkfs
+    - dd if=/dev/zero
+  require_approval_for:
+    - system updates
+    - installing packages

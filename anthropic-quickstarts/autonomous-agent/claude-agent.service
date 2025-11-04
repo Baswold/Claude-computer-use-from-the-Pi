@@ -1,0 +1,28 @@
+# Systemd service file for Claude Autonomous Agent
+# Install: sudo cp claude-agent.service /etc/systemd/system/
+# Enable: sudo systemctl enable claude-agent
+# Start: sudo systemctl start claude-agent
+
+[Unit]
+Description=Claude Autonomous Agent
+Documentation=https://github.com/Baswold/Claude-computer-use-from-the-Pi
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/Claude-computer-use-from-the-Pi/anthropic-quickstarts/autonomous-agent
+Environment="PATH=/home/pi/Claude-computer-use-from-the-Pi/anthropic-quickstarts/autonomous-agent/.venv/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=/home/pi/Claude-computer-use-from-the-Pi/anthropic-quickstarts/autonomous-agent/.venv/bin/python src/autonomous_agent.py
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/pi/Claude-computer-use-from-the-Pi/anthropic-quickstarts/autonomous-agent/data/logs/service.log
+StandardError=append:/home/pi/Claude-computer-use-from-the-Pi/anthropic-quickstarts/autonomous-agent/data/logs/service.err
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
