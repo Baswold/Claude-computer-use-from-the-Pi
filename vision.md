@@ -1,8 +1,32 @@
-# Vision: Claude's Computer
+<div align="center">
 
-## Core Concept
+```
+   ╔═══════════════════════════════════════════════════════════╗
+   ║                                                           ║
+   ║                      🎯  V I S I O N                      ║
+   ║                                                           ║
+   ║               Claude's Computer: Autonomy                 ║
+   ║                                                           ║
+   ╚═══════════════════════════════════════════════════════════╝
+```
 
-Give Claude autonomous ownership of a computer (Raspberry Pi) where Claude operates as an independent agent, not just an assistant. Claude can work on projects, set timers, and execute ideas without constant human prompting - essentially "hiring" Claude as a developer.
+### *From Assistant to Operator*
+
+</div>
+
+---
+
+## 💭 Core Concept
+
+**Give Claude true ownership of a computer** (Raspberry Pi) where Claude operates as an independent agent—not just an assistant, but as the *operator* of the machine.
+
+Claude can:
+- 🎯 Conceive and execute ideas independently
+- ⏰ Set timers and schedule future work
+- 📋 Create and manage projects
+- 💭 Make autonomous decisions
+
+**The experiment**: "Hire" Claude as a developer for a startup.
 
 ## ✅ Implemented Features
 

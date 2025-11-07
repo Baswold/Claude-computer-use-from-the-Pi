@@ -57,8 +57,15 @@ async def run_test():
     logger = logging.getLogger(__name__)
 
     logger.info("=" * 70)
-    logger.info("CLAUDE TOOLS TEST SCRIPT")
+    logger.info("   ╔═══════════════════════════════════════════════════════════╗")
+    logger.info("   ║                                                           ║")
+    logger.info("   ║              🧪  T O O L   T E S T I N G                  ║")
+    logger.info("   ║                                                           ║")
+    logger.info("   ║         Comprehensive Validation Suite v2.0               ║")
+    logger.info("   ║                                                           ║")
+    logger.info("   ╚═══════════════════════════════════════════════════════════╝")
     logger.info("=" * 70)
+    logger.info("")
 
     # Get project root
     project_root = Path(__file__).parent.parent
