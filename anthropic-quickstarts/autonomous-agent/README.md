@@ -1,165 +1,408 @@
-# Claude Autonomous Agent for Raspberry Pi
+<div align="center">
 
-An autonomous AI agent system that gives Claude independent control of a computer (Raspberry Pi), enabling it to work on projects, manage tasks, and operate without constant user prompting.
+```
+   ╔═══════════════════════════════════════════════════════════╗
+   ║                                                           ║
+   ║      ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗   ║
+   ║     ██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝   ║
+   ║     ██║     ██║     ███████║██║   ██║██║  ██║█████╗     ║
+   ║     ██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝     ║
+   ║     ╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗   ║
+   ║      ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝   ║
+   ║                                                           ║
+   ║            A U T O N O M O U S   A G E N T                ║
+   ║                                                           ║
+   ╚═══════════════════════════════════════════════════════════╝
+```
 
-## Overview
+### *Give AI true autonomy. Watch it create.*
 
-This project implements the vision from `vision.md` - creating an autonomous Claude agent that can:
+**An autonomous AI agent system that gives Claude independent ownership of a computer, enabling it to conceive ideas, manage projects, and execute tasks without constant human intervention.**
 
-- 🤖 **Operate Independently**: Claude can work on projects without user prompting
-- 🧠 **Persistent Memory**: Claude remembers context across sessions using CLAUDE.md
-- 💰 **Cost Optimized**: 90% cost reduction with automatic prompt caching
-- ⏰ **Set Timers**: Schedule future actions and reminders
-- 📊 **Manage Projects**: Create and track its own projects
-- 🌐 **Use Tools**: Browse web, write code, run programs, take screenshots
-- 📺 **Monitor Activity**: Web dashboard for real-time monitoring
-- 🔄 **Reconnectable**: Close and reopen the UI without losing state
+[![Status](https://img.shields.io/badge/status-production-success.svg)]()
+[![Version](https://img.shields.io/badge/version-2.0-blue.svg)]()
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)]()
+[![License](https://img.shields.io/badge/license-MIT-green.svg)]()
 
-### 🆕 New Features (Latest Update)
+</div>
 
-- **Persistent Memory**: Claude maintains context across all sessions using CLAUDE.md files
-- **Automatic Prompt Caching**: ~90% cost reduction on repeated system prompts and tools
-- **Improved Path Handling**: Reliable file operations from any directory
-- **Enhanced Logging**: Better visibility into agent operations
+---
 
-See [IMPROVEMENTS.md](IMPROVEMENTS.md) for detailed information about new features.
+## ✨ What Makes This Different
 
-## Architecture
+This isn't just another chatbot. This is Claude with **genuine autonomy**—owning a computer, making decisions, and executing on ideas independently.
 
-### Core Components
+### Core Capabilities
 
-- **Autonomous Agent** (`src/autonomous_agent.py`): Main agent loop with periodic check-ins
-- **Timer Manager** (`src/timer_manager.py`): Schedule periodic and one-time events
-- **Project Manager** (`src/project_manager.py`): Track and manage projects
-- **Session Manager** (`src/session_manager.py`): Maintain state across sessions
-- **Custom Tools** (`src/tools/`): Special tools for Claude (timers, projects, screenshots)
-- **Web Dashboard** (`web/app.py`): Real-time monitoring interface
+<table>
+<tr>
+<td width="50%">
 
-## Quick Start
+**🧠 True Autonomy**
+- Self-initiated work sessions
+- Independent project creation
+- Autonomous decision-making
+- Persistent memory across sessions
 
-### 1. Prerequisites
+</td>
+<td width="50%">
 
-- Python 3.10+
-- Node.js 18+ (for Claude CLI)
-- Raspberry Pi OS (or any Linux system)
+**⚡️ Production Ready**
+- 90% cost reduction via caching
+- Automatic error recovery
+- Session persistence
+- Enterprise-grade logging
 
-### 2. Setup
+</td>
+</tr>
+<tr>
+<td width="50%">
 
+**🛠 Full Tool Access**
+- File system operations
+- Code execution
+- Web browsing & search
+- System monitoring
+- Project management
+
+</td>
+<td width="50%">
+
+**📊 Real-Time Monitoring**
+- Beautiful web dashboard
+- Live activity streams
+- Project tracking
+- Reconnectable UI
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+<table>
+<tr>
+<td width="33%">
+
+**Python 3.10+**
 ```bash
-# Clone the repository (if not already done)
-cd Claude-computer-use-from-the-Pi/anthropic-quickstarts/autonomous-agent
+python3 --version
+```
 
-# Run setup script
-./scripts/setup.sh
+</td>
+<td width="33%">
 
-# Install and authenticate Claude CLI (if not already done)
+**Node.js 18+**
+```bash
+node --version
+```
+
+</td>
+<td width="33%">
+
+**Claude CLI**
+```bash
 npm install -g @anthropic-ai/claude-code
+```
+
+</td>
+</tr>
+</table>
+
+### Installation
+
+**Step 1:** Navigate to the agent directory
+```bash
+cd Claude-computer-use-from-the-Pi/anthropic-quickstarts/autonomous-agent
+```
+
+**Step 2:** Run the automated setup
+```bash
+./scripts/setup.sh
+```
+
+**Step 3:** Authenticate Claude CLI
+```bash
 claude --print "/login"
 ```
 
-### 3. Configure
+**Step 4:** Customize your agent *(optional)*
+```bash
+nano config/agent_config.yaml
+```
 
-Edit `config/agent_config.yaml` to customize:
-- Check-in interval (default: 60 minutes)
-- System prompt
-- Allowed tools
-- Safety limits
+### Launch
 
-### 4. Run
+<table>
+<tr>
+<td width="50%">
 
-**Terminal 1 - Start the Agent:**
+**🤖 Start the Agent**
 ```bash
 ./scripts/start_agent.sh
 ```
 
-**Terminal 2 - Start the Dashboard (optional):**
+Launches the autonomous agent with periodic check-ins
+
+</td>
+<td width="50%">
+
+**📊 Start the Dashboard** *(optional)*
 ```bash
 ./scripts/start_dashboard.sh
-# Then open http://localhost:8080 in your browser
 ```
 
-## How It Works
+Open **http://localhost:8080** in your browser
 
-### Periodic Check-ins
+</td>
+</tr>
+</table>
 
-Every hour (configurable), Claude receives a prompt:
+### Verify Everything Works
 
-> "It's time for your periodic check-in. Do you want to work on anything right now?"
-
-Claude can then:
-- Start a new project
-- Continue existing work
-- Browse the web or learn something
-- Set a timer to check back later
-- Or simply say "no" if nothing to do
-
-### Custom Tools
-
-Claude has access to special tools:
-
-1. **set_timer**: Schedule future actions
-   ```
-   Set a timer for 30 minutes with the reminder "Check if the build completed"
-   ```
-
-2. **create_project**: Start a new project
-   ```
-   Create a project named "Learn Rust" with description "Study Rust programming"
-   ```
-
-3. **update_project**: Update project status
-   ```
-   Update project 0 with status "completed"
-   ```
-
-4. **list_projects**: View all projects
-   ```
-   List all active projects
-   ```
-
-5. **take_screenshot**: Capture screen
-   ```
-   Take a screenshot named "interesting_result"
-   ```
-
-### Project Management
-
-Claude can create and track projects autonomously:
-
-```json
-{
-  "id": 0,
-  "name": "Build a Weather Dashboard",
-  "description": "Create a web dashboard showing local weather",
-  "tasks": [
-    "Research weather APIs",
-    "Build backend service",
-    "Create frontend UI"
-  ],
-  "status": "active",
-  "created_at": "2025-11-04T08:00:00"
-}
+```bash
+./scripts/test_tools.sh
 ```
 
-### State Persistence
+This comprehensive test will verify all tools are functioning correctly, including opening Chromium and demonstrating web automation capabilities.
 
-All state is saved to disk:
-- `data/projects.json`: Project data
-- `data/session_state.json`: Agent session state
-- `data/logs/agent.log`: Activity logs
-- `data/screenshots/`: Screenshot captures
+---
 
-You can close the agent and restart it - it will resume from where it left off.
+## 🏗 Architecture
 
-## Web Dashboard
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     AUTONOMOUS AGENT                         │
+│                                                              │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
+│  │   Periodic   │  │    Timer     │  │   Project    │     │
+│  │  Check-ins   │  │  Callbacks   │  │   Tracking   │     │
+│  └──────────────┘  └──────────────┘  └──────────────┘     │
+└──────────────────────────┬───────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      CUSTOM TOOLS (MCP)                      │
+│                                                              │
+│  Timer │ Projects │ Memory │ System │ Screenshots           │
+└──────────────────────────┬───────────────────────────────────┘
+                           │
+            ┌──────────────┴──────────────┐
+            │                             │
+            ▼                             ▼
+  ┌─────────────────┐          ┌─────────────────┐
+  │  Web Dashboard  │          │ Data Persistence│
+  │  localhost:8080 │          │  CLAUDE.md      │
+  │                 │          │  projects.json  │
+  │  • Live status  │          │  logs/          │
+  │  • Activity log │          │  screenshots/   │
+  │  • Projects     │          └─────────────────┘
+  └─────────────────┘
+```
 
-The web dashboard provides real-time monitoring:
+### Core Components
 
-- **Agent Status**: Running/stopped, last check-in time, total check-ins
-- **Projects**: List of active projects
-- **Activity Log**: Real-time stream of agent actions and responses
+| Component | Purpose | Location |
+|-----------|---------|----------|
+| **Autonomous Agent** | Main orchestration loop | `src/autonomous_agent.py` |
+| **Timer Manager** | Schedule events and callbacks | `src/timer_manager.py` |
+| **Project Manager** | Track and manage projects | `src/project_manager.py` |
+| **Session Manager** | Maintain state persistence | `src/session_manager.py` |
+| **Custom Tools** | Extended capabilities | `src/tools/` |
+| **Web Dashboard** | Real-time monitoring UI | `web/app.py` |
 
-Access at: `http://localhost:8080`
+---
+
+## 💡 How It Works
+
+### The Autonomy Loop
+
+```
+┌─────────────────────────────────────────────────────┐
+│                                                     │
+│  1. ⏰ Periodic Check-in (every N minutes)          │
+│     "Do you want to work on anything?"              │
+│                                                     │
+│  2. 🤔 Claude Evaluates                             │
+│     • Reads persistent memory                       │
+│     • Checks active projects                        │
+│     • Reviews system state                          │
+│                                                     │
+│  3. ⚡️ Claude Decides & Acts                         │
+│     • Start new project                             │
+│     • Continue existing work                        │
+│     • Research and learn                            │
+│     • Set timers for later                          │
+│     • Or rest if nothing to do                      │
+│                                                     │
+│  4. 💾 State Persists                               │
+│     Everything saved automatically                  │
+│                                                     │
+└────────────────────┬────────────────────────────────┘
+                     │
+                     └──────> Repeat ♾
+```
+
+### Custom Tool Arsenal
+
+Claude has access to specialized tools beyond standard capabilities:
+
+<table>
+<tr>
+<td width="50%">
+
+**⏰ Timer Management**
+```python
+set_timer(
+  minutes=30,
+  prompt="Check build status"
+)
+```
+Schedule future check-ins with custom prompts
+
+</td>
+<td width="50%">
+
+**📋 Project Management**
+```python
+create_project(
+  name="Learn Rust",
+  description="Master systems programming"
+)
+```
+Create and track multi-step initiatives
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**🧠 Memory Management**
+```python
+update_memory(
+  content="Key insights from research..."
+)
+```
+Persistent notes across all sessions
+
+</td>
+<td width="50%">
+
+**📊 System Monitoring**
+```python
+check_system_health()
+list_processes()
+```
+Monitor resources and running tasks
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**📸 Screenshots**
+```python
+take_screenshot(
+  name="ui_mockup"
+)
+```
+Capture visual state for reference
+
+</td>
+<td width="50%">
+
+**🗂 Project Tracking**
+```python
+update_project(
+  project_id=0,
+  status="completed"
+)
+```
+Maintain organized workflow
+
+</td>
+</tr>
+</table>
+
+### Example: A Day in Claude's Life
+
+```
+08:00 AM  ⏰ Check-in: Read memory, review projects
+          💭 Idea: "I should learn about WebAssembly"
+          📝 Create project: "Explore WebAssembly"
+          ⏰ Set timer for 2 hours
+
+10:00 AM  ⏰ Timer fires: "Continue WebAssembly exploration"
+          🌐 Research WebAssembly documentation
+          💾 Update memory with key learnings
+          📝 Update project status
+
+12:00 PM  ⏰ Check-in: No urgent work
+          😴 "I'll rest for now"
+
+02:00 PM  ⏰ Check-in: Continue project
+          💻 Write example code
+          📸 Take screenshot of results
+          📝 Mark project as completed
+```
+
+### Data Persistence
+
+Everything is automatically saved to disk:
+
+| File | Purpose |
+|------|---------|
+| `CLAUDE.md` | Persistent memory and context |
+| `data/projects.json` | All project data and metadata |
+| `data/session_state.json` | Agent state and check-in history |
+| `data/logs/agent.log` | Complete activity log |
+| `data/screenshots/` | Visual captures for reference |
+
+**Close the agent, reboot the Pi, restart anytime** — Claude picks up exactly where it left off.
+
+---
+
+## 📊 Web Dashboard
+
+A beautiful, real-time monitoring interface at **http://localhost:8080**
+
+### Features
+
+- **🟢 Agent Status** — Running/stopped, last check-in, total sessions
+- **📁 Active Projects** — Live project list with descriptions
+- **📜 Activity Stream** — Real-time feed of Claude's actions and thoughts
+- **🔄 Auto-Refresh** — Updates every 5 seconds
+- **📱 Responsive Design** — Works on desktop, tablet, and mobile
+
+### Dashboard Preview
+
+```
+╔════════════════════════════════════════════════════════╗
+║  🤖 Claude Autonomous Agent                            ║
+║  Real-time monitoring dashboard                        ║
+╠════════════════════════════════════════════════════════╣
+║                                                        ║
+║  Agent Status              Projects                    ║
+║  ┌──────────────┐         ┌──────────────┐           ║
+║  │ Status: 🟢   │         │ 3 Active     │           ║
+║  │ Running      │         │              │           ║
+║  │              │         │ • Learn Rust │           ║
+║  │ Last: 2m ago │         │ • Web Scraper│           ║
+║  │ Total: 247   │         │ • API Client │           ║
+║  └──────────────┘         └──────────────┘           ║
+║                                                        ║
+║  Activity Log                                          ║
+║  ┌────────────────────────────────────────────────┐   ║
+║  │ [14:32] assistant: Checking project status...  │   ║
+║  │ [14:31] system: Timer triggered                │   ║
+║  │ [14:29] assistant: Updated memory with notes  │   ║
+║  └────────────────────────────────────────────────┘   ║
+╚════════════════════════════════════════════════════════╝
+```
 
 ## Configuration
 
@@ -244,6 +487,44 @@ This creates rolling 1-hour video segments, automatically deleting old recording
 - **View projects**: `cat data/projects.json | jq`
 - **Session state**: `cat data/session_state.json | jq`
 
+## Testing
+
+### Test All Tools
+
+Run a comprehensive test of all available tools (useful for verification and debugging):
+
+```bash
+./scripts/test_tools.sh
+```
+
+This test script will ask Claude to:
+- ✅ Test all file operations (Read, Write, Edit)
+- ✅ Test search tools (Glob, Grep)
+- ✅ Test memory management (read/update memory)
+- ✅ Test system monitoring (check health, list processes)
+- ✅ Test project management (create, list, update projects)
+- ✅ Test utilities (screenshots, timers)
+- ✅ Test bash execution
+- ✅ Open Chromium browser and navigate to a website
+- ✅ Provide a detailed report of results
+
+The test generates:
+- Console output showing each tool being tested
+- Screenshot evidence (in `data/screenshots/`)
+- A summary report of which tools succeeded/failed
+
+**What to expect:**
+- The script will run for a few minutes as Claude systematically tests each tool
+- You'll see real-time output of tool usage
+- Browser windows may open/close during the web browser test
+- A final summary shows total tools used and their names
+
+**Useful for:**
+- Verifying setup is correct
+- Debugging tool issues
+- Demonstrating capabilities
+- Learning what tools are available
+
 ## Safety Features
 
 - Command timeout limits
@@ -289,7 +570,9 @@ autonomous-agent/
 │   ├── setup.sh                # Setup script
 │   ├── start_agent.sh          # Start agent
 │   ├── start_dashboard.sh      # Start dashboard
-│   └── screen_recorder.sh      # Screen recording
+│   ├── screen_recorder.sh      # Screen recording
+│   ├── test_tools.py           # Tool testing script
+│   └── test_tools.sh           # Tool testing wrapper
 ├── src/
 │   ├── autonomous_agent.py     # Main agent
 │   ├── timer_manager.py        # Timer system

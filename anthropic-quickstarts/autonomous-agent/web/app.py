@@ -66,156 +66,415 @@ async def get_dashboard():
     """Serve the main dashboard HTML"""
     html_content = """
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Claude Autonomous Agent Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Autonomous Agent — Dashboard</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
-            background: #0f172a;
-            color: #e2e8f0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container {
-            max-width: 1400px;
+
+        :root {
+            --bg-primary: #0a0f1e;
+            --bg-secondary: #111827;
+            --bg-card: #1a1f35;
+            --border-color: #2d3548;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+            --accent-primary: #3b82f6;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-error: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-10px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1600px;
             margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        h1 {
-            color: #f97316;
-            margin-bottom: 10px;
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
-        .subtitle {
-            color: #94a3b8;
-            margin-bottom: 30px;
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: pulse 3s ease-in-out infinite;
         }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.125rem;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
+
         .card {
-            background: #1e293b;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-        }
-        .card h2 {
-            margin-top: 0;
-            color: #f97316;
-            font-size: 1.2em;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
+            background: var(--bg-card);
             border-radius: 12px;
-            font-size: 0.85em;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px -2px rgba(59, 130, 246, 0.2), 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+        }
+
+        .card h2 {
+            font-size: 1.125rem;
             font-weight: 600;
+            letter-spacing: -0.01em;
         }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
         .status-running {
-            background: #10b981;
-            color: #fff;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-success);
+            border: 1px solid var(--accent-success);
         }
+
         .status-stopped {
-            background: #ef4444;
-            color: #fff;
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-error);
+            border: 1px solid var(--accent-error);
         }
-        .log-container {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 15px;
-            height: 400px;
-            overflow-y: auto;
-            font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 0.9em;
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
         }
-        .log-entry {
-            margin-bottom: 10px;
-            padding: 8px;
-            border-left: 3px solid #334155;
-            padding-left: 12px;
+
+        .status-running .status-dot {
+            background: var(--accent-success);
+            box-shadow: 0 0 8px var(--accent-success);
         }
-        .log-user { border-left-color: #3b82f6; }
-        .log-assistant { border-left-color: #10b981; }
-        .log-system { border-left-color: #f97316; }
-        .log-time {
-            color: #64748b;
-            font-size: 0.85em;
-            margin-right: 8px;
+
+        .status-stopped .status-dot {
+            background: var(--accent-error);
         }
+
         .stat {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #334155;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
         }
+
+        .stat:last-child {
+            border-bottom: none;
+        }
+
+        .stat:hover {
+            background: rgba(59, 130, 246, 0.05);
+            padding-left: 0.5rem;
+            margin-left: -0.5rem;
+            border-radius: 6px;
+        }
+
         .stat-label {
-            color: #94a3b8;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
         }
+
         .stat-value {
-            color: #f97316;
+            color: var(--accent-primary);
             font-weight: 600;
+            font-size: 0.9375rem;
         }
-        .project-item {
-            background: #0f172a;
-            padding: 12px;
-            margin-bottom: 10px;
+
+        .log-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            height: 500px;
+            overflow-y: auto;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', 'Courier New', monospace;
+            font-size: 0.875rem;
+            scroll-behavior: smooth;
+        }
+
+        .log-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .log-container::-webkit-scrollbar-track {
+            background: var(--bg-primary);
             border-radius: 4px;
-            border-left: 3px solid #f97316;
         }
+
+        .log-container::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .log-container::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
+        }
+
+        .log-entry {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid var(--border-color);
+            padding-left: 1rem;
+            border-radius: 0 4px 4px 0;
+            transition: all 0.2s;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .log-entry:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .log-user { border-left-color: var(--accent-primary); }
+        .log-assistant { border-left-color: var(--accent-success); }
+        .log-system { border-left-color: var(--accent-warning); }
+
+        .log-time {
+            color: var(--text-tertiary);
+            font-size: 0.8125rem;
+            margin-right: 0.625rem;
+        }
+
+        .log-role {
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .project-item {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-primary);
+            transition: all 0.2s;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .project-item:hover {
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateX(4px);
+        }
+
         .project-name {
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 0.375rem;
+            color: var(--text-primary);
         }
+
         .project-desc {
-            color: #94a3b8;
-            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-tertiary);
+            font-size: 0.9375rem;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        .connection-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-success);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🤖</div>
+                <div class="logo-text">
+                    <h1>Claude Autonomous Agent</h1>
+                    <p>Real-time Monitoring Dashboard</p>
+                </div>
+            </div>
+            <div class="connection-status">
+                <div class="connection-dot"></div>
+                <span>Live</span>
+            </div>
+        </div>
+    </header>
+
     <div class="container">
-        <h1>🤖 Claude Autonomous Agent</h1>
-        <p class="subtitle">Real-time monitoring dashboard</p>
 
         <div class="grid">
             <div class="card">
-                <h2>Agent Status</h2>
+                <div class="card-header">
+                    <span class="card-icon">⚡️</span>
+                    <h2>Agent Status</h2>
+                </div>
                 <div id="status-info">
                     <div class="stat">
-                        <span class="stat-label">Status:</span>
-                        <span id="agent-status" class="status-badge status-stopped">Loading...</span>
+                        <span class="stat-label">Status</span>
+                        <span id="agent-status" class="status-indicator status-stopped">
+                            <span class="status-dot"></span>
+                            Loading...
+                        </span>
                     </div>
                     <div class="stat">
-                        <span class="stat-label">Last Check-in:</span>
-                        <span class="stat-value" id="last-checkin">-</span>
+                        <span class="stat-label">Last Check-in</span>
+                        <span class="stat-value" id="last-checkin">—</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-label">Total Check-ins:</span>
+                        <span class="stat-label">Total Check-ins</span>
                         <span class="stat-value" id="total-checkins">0</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-label">Current Task:</span>
+                        <span class="stat-label">Current Task</span>
                         <span class="stat-value" id="current-task">None</span>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <h2>Projects</h2>
+                <div class="card-header">
+                    <span class="card-icon">📁</span>
+                    <h2>Active Projects</h2>
+                </div>
                 <div id="projects-list">
-                    <p style="color: #64748b;">Loading projects...</p>
+                    <div class="empty-state">Loading projects...</div>
                 </div>
             </div>
         </div>
 
         <div class="card">
-            <h2>Activity Log</h2>
+            <div class="card-header">
+                <span class="card-icon">📜</span>
+                <h2>Activity Stream</h2>
+            </div>
             <div class="log-container" id="log-container">
-                <p style="color: #64748b;">Connecting to live feed...</p>
+                <div class="empty-state">Connecting to live feed...</div>
             </div>
         </div>
     </div>
@@ -256,43 +515,90 @@ async def get_dashboard():
 
         function updateStatus(status) {
             const badge = document.getElementById('agent-status');
-            badge.textContent = status.running ? 'Running' : 'Stopped';
-            badge.className = 'status-badge ' + (status.running ? 'status-running' : 'status-stopped');
+            const statusText = status.running ? 'Running' : 'Stopped';
+            const statusClass = status.running ? 'status-running' : 'status-stopped';
 
-            document.getElementById('last-checkin').textContent =
-                status.last_checkin ? new Date(status.last_checkin).toLocaleString() : '-';
-            document.getElementById('total-checkins').textContent = status.total_checkins;
+            badge.className = `status-indicator ${statusClass}`;
+            badge.innerHTML = `
+                <span class="status-dot"></span>
+                ${statusText}
+            `;
+
+            const lastCheckin = status.last_checkin
+                ? new Date(status.last_checkin).toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit'
+                  })
+                : '—';
+
+            document.getElementById('last-checkin').textContent = lastCheckin;
+            document.getElementById('total-checkins').textContent = status.total_checkins || 0;
             document.getElementById('current-task').textContent = status.current_task || 'None';
         }
 
         function updateProjects(projects) {
             const container = document.getElementById('projects-list');
             if (projects.length === 0) {
-                container.innerHTML = '<p style="color: #64748b;">No active projects</p>';
+                container.innerHTML = '<div class="empty-state">No active projects</div>';
                 return;
             }
 
             container.innerHTML = projects.map(p => `
                 <div class="project-item">
-                    <div class="project-name">${p.name}</div>
-                    <div class="project-desc">${p.description}</div>
+                    <div class="project-name">${escapeHtml(p.name)}</div>
+                    <div class="project-desc">${escapeHtml(p.description || '')}</div>
                 </div>
             `).join('');
         }
 
         function addLogEntry(role, content, timestamp) {
             const container = document.getElementById('log-container');
+
+            // Remove empty state if it exists
+            const emptyState = container.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+
             const entry = document.createElement('div');
             entry.className = `log-entry log-${role}`;
 
-            const time = timestamp ? new Date(timestamp).toLocaleTimeString() : new Date().toLocaleTimeString();
+            const time = timestamp
+                ? new Date(timestamp).toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                  })
+                : new Date().toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                  });
+
             entry.innerHTML = `
-                <span class="log-time">[${time}]</span>
-                <strong>${role}:</strong> ${content}
+                <span class="log-time">${time}</span>
+                <span class="log-role">${role}</span>
+                ${escapeHtml(content)}
             `;
 
             container.appendChild(entry);
+
+            // Smooth scroll to bottom
             container.scrollTop = container.scrollHeight;
+
+            // Limit log entries to prevent memory issues
+            const entries = container.querySelectorAll('.log-entry');
+            if (entries.length > 100) {
+                entries[0].remove();
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // Poll for updates every 5 seconds

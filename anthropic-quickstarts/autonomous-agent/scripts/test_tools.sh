@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Start the Claude Autonomous Agent
-# Part of the Claude Autonomous Agent System v2.0
+# Comprehensive tool testing for Claude Autonomous Agent
+# Tests all available tools and demonstrates capabilities
 
 set -euo pipefail
 
@@ -18,30 +18,33 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Beautiful banner
 clear
-echo -e "${BLUE}"
+echo -e "${ORANGE}"
 cat << "EOF"
    ╔═══════════════════════════════════════════════════════════╗
    ║                                                           ║
-   ║      ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗   ║
-   ║     ██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝   ║
-   ║     ██║     ██║     ███████║██║   ██║██║  ██║█████╗     ║
-   ║     ██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝     ║
-   ║     ╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗   ║
-   ║      ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝   ║
+   ║              🧪  T O O L   T E S T I N G                  ║
    ║                                                           ║
-   ║            A U T O N O M O U S   A G E N T                ║
+   ║         Comprehensive Validation Suite v2.0               ║
    ║                                                           ║
    ╚═══════════════════════════════════════════════════════════╝
 EOF
-echo -e "${NC}"
+echo -e "${NC}\n"
 
-echo -e "${BOLD}Starting Autonomous Agent...${NC}"
+echo -e "${BOLD}Claude Tools Comprehensive Test${NC}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 
-# Display environment info
+echo -e "${GRAY}This test will verify:${NC}"
+echo -e "  ${ORANGE}▸${NC} File operations (Read, Write, Edit)"
+echo -e "  ${ORANGE}▸${NC} Search tools (Glob, Grep)"
+echo -e "  ${ORANGE}▸${NC} Memory management"
+echo -e "  ${ORANGE}▸${NC} System monitoring"
+echo -e "  ${ORANGE}▸${NC} Project management"
+echo -e "  ${ORANGE}▸${NC} Screenshots and timers"
+echo -e "  ${ORANGE}▸${NC} Bash execution"
+echo -e "  ${ORANGE}▸${NC} Web browser automation (Chromium → Apple.com)"
+echo
+
 echo -e "${ORANGE}▸${NC} Project directory: ${GREEN}$PROJECT_DIR${NC}"
-echo -e "${ORANGE}▸${NC} Version: ${GREEN}2.0${NC}"
-echo -e "${ORANGE}▸${NC} Date: ${GREEN}$(date '+%Y-%m-%d %H:%M:%S')${NC}"
 echo
 
 cd "$PROJECT_DIR"
@@ -63,21 +66,37 @@ echo -e "${ORANGE}▸${NC} Activating environment..."
 source .venv/bin/activate
 echo -e "${GREEN}✓${NC} Environment activated"
 
-# Check for required files
-echo -e "${ORANGE}▸${NC} Verifying configuration..."
-if [ ! -f "config/agent_config.yaml" ]; then
-    echo -e "${RED}✗${NC} Configuration file not found"
-    exit 1
+echo
+echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BOLD}${GREEN}🚀 Starting test suite...${NC}"
+echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo
+echo -e "${GRAY}Claude will now systematically test each tool...${NC}"
+echo
+
+# Run the test script
+python scripts/test_tools.py
+
+# Check exit code
+EXIT_CODE=$?
+
+echo
+echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+if [ $EXIT_CODE -eq 0 ]; then
+    echo -e "${BOLD}${GREEN}✓ Test suite completed successfully!${NC}"
+    echo
+    echo -e "${GRAY}Check the following for results:${NC}"
+    echo -e "  ${ORANGE}▸${NC} Console output above"
+    echo -e "  ${ORANGE}▸${NC} ${GREEN}data/screenshots/${NC} for captured images"
+    echo -e "  ${ORANGE}▸${NC} ${GREEN}data/logs/agent.log${NC} for detailed logs"
+else
+    echo -e "${BOLD}${RED}✗ Test suite encountered errors${NC}"
+    echo
+    echo -e "${GRAY}Check the output above for details${NC}"
 fi
-echo -e "${GREEN}✓${NC} Configuration verified"
 
-echo
-echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BOLD}${GREEN}🚀 Launching agent...${NC}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo
-echo -e "${GRAY}Press Ctrl+C to stop${NC}"
-echo
 
-# Run the agent
-python src/autonomous_agent.py
+exit $EXIT_CODE
