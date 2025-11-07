@@ -244,6 +244,44 @@ This creates rolling 1-hour video segments, automatically deleting old recording
 - **View projects**: `cat data/projects.json | jq`
 - **Session state**: `cat data/session_state.json | jq`
 
+## Testing
+
+### Test All Tools
+
+Run a comprehensive test of all available tools (useful for verification and debugging):
+
+```bash
+./scripts/test_tools.sh
+```
+
+This test script will ask Claude to:
+- ✅ Test all file operations (Read, Write, Edit)
+- ✅ Test search tools (Glob, Grep)
+- ✅ Test memory management (read/update memory)
+- ✅ Test system monitoring (check health, list processes)
+- ✅ Test project management (create, list, update projects)
+- ✅ Test utilities (screenshots, timers)
+- ✅ Test bash execution
+- ✅ Open Chromium browser and navigate to a website
+- ✅ Provide a detailed report of results
+
+The test generates:
+- Console output showing each tool being tested
+- Screenshot evidence (in `data/screenshots/`)
+- A summary report of which tools succeeded/failed
+
+**What to expect:**
+- The script will run for a few minutes as Claude systematically tests each tool
+- You'll see real-time output of tool usage
+- Browser windows may open/close during the web browser test
+- A final summary shows total tools used and their names
+
+**Useful for:**
+- Verifying setup is correct
+- Debugging tool issues
+- Demonstrating capabilities
+- Learning what tools are available
+
 ## Safety Features
 
 - Command timeout limits
@@ -289,7 +327,9 @@ autonomous-agent/
 │   ├── setup.sh                # Setup script
 │   ├── start_agent.sh          # Start agent
 │   ├── start_dashboard.sh      # Start dashboard
-│   └── screen_recorder.sh      # Screen recording
+│   ├── screen_recorder.sh      # Screen recording
+│   ├── test_tools.py           # Tool testing script
+│   └── test_tools.sh           # Tool testing wrapper
 ├── src/
 │   ├── autonomous_agent.py     # Main agent
 │   ├── timer_manager.py        # Timer system
