@@ -33,3 +33,21 @@ logs/
 # Temporary files
 tmp/
 temp/
+
+# Autonomous agent runtime data
+anthropic-quickstarts/autonomous-agent/data/
+anthropic-quickstarts/autonomous-agent/.venv/
+anthropic-quickstarts/autonomous-agent/*.log
+
+# Session state and generated files
+anthropic-quickstarts/autonomous-agent/data/logs/
+anthropic-quickstarts/autonomous-agent/data/screenshots/
+anthropic-quickstarts/autonomous-agent/data/recordings/
+anthropic-quickstarts/autonomous-agent/data/session_state.json
+anthropic-quickstarts/autonomous-agent/data/projects.json
+
+# Keep example files
+!anthropic-quickstarts/autonomous-agent/.env.example
+
+# Claude memory (optional - uncomment if you don't want to track CLAUDE.md)
+# anthropic-quickstarts/autonomous-agent/CLAUDE.md
